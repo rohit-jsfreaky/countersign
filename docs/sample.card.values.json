@@ -1,0 +1,186 @@
+{
+  "version": 1,
+  "template": {
+    "module": "../templates/card.tsx",
+    "id": "countersign.Card",
+    "version": "1.0.0",
+    "sha256": "700ff30b44a27c9d1c7fbb6a83969e164113784825bb3cafb6c4a7ad199c2992"
+  },
+  "formats": [
+    "card"
+  ],
+  "values": {
+    "project": "shop-infra · production",
+    "date": "2026-11-22",
+    "requestedBy": "Sam Okafor",
+    "reviewer": "Lena Brandt",
+    "link": "https://github.com/rohit-jsfreaky/countersign/blob/main/public/samples/main.tf",
+    "decision": "conditions",
+    "note": "Take a manual snapshot of shop-orders first, and confirm the exports bucket is archived. SSH from 0.0.0.0/0 is not approved: use the bastion range.",
+    "terraform": "1.17.2",
+    "drift": 0,
+    "errored": false,
+    "add": 3,
+    "change": 4,
+    "destroy": 3,
+    "replace": 1,
+    "high": 4,
+    "medium": 1,
+    "changes": [
+      {
+        "address": "aws_db_instance.orders",
+        "type": "aws_db_instance",
+        "action": "replace",
+        "risk": "high",
+        "why": "storage_encrypted can't change in place, so Terraform deletes orders and creates a new one.",
+        "forcedBy": [
+          "storage_encrypted"
+        ],
+        "flags": [
+          "Holds data (database). The new one starts empty unless it is restored from a backup.",
+          "No final snapshot is taken first (skip_final_snapshot = true).",
+          "Deleted before the new one exists (no create_before_destroy): expect a gap."
+        ],
+        "diffs": [
+          {
+            "path": "storage_encrypted",
+            "before": "false",
+            "after": "true"
+          }
+        ],
+        "checked": false
+      },
+      {
+        "address": "aws_s3_bucket.exports",
+        "type": "aws_s3_bucket",
+        "action": "delete",
+        "risk": "high",
+        "why": "It is no longer in the configuration: removed, or renamed or moved without a moved block.",
+        "forcedBy": [],
+        "flags": [
+          "Holds data (storage bucket). Destroying it deletes what is in it.",
+          "If the bucket isn't empty the delete fails (force_destroy = false)."
+        ],
+        "diffs": [],
+        "checked": false
+      },
+      {
+        "address": "aws_iam_role_policy.app",
+        "type": "aws_iam_role_policy",
+        "action": "update",
+        "risk": "high",
+        "why": "Updated in place.",
+        "forcedBy": [],
+        "flags": [
+          "Allows s3:* on every resource (*)."
+        ],
+        "diffs": [
+          {
+            "path": "policy.Statement[0].Action",
+            "before": "[\"s3:GetObject\",\"s3:PutObject\"]",
+            "after": "s3:*"
+          },
+          {
+            "path": "policy.Statement[0].Resource",
+            "before": "arn:aws:s3:::shop-exports/*",
+            "after": "*"
+          }
+        ],
+        "checked": false
+      },
+      {
+        "address": "aws_vpc_security_group_ingress_rule.ssh",
+        "type": "aws_vpc_security_group_ingress_rule",
+        "action": "create",
+        "risk": "high",
+        "why": "New resource.",
+        "forcedBy": [],
+        "flags": [
+          "Opens port 22 to the whole internet (0.0.0.0/0)."
+        ],
+        "diffs": [],
+        "checked": false
+      },
+      {
+        "address": "aws_instance.web[2]",
+        "type": "aws_instance",
+        "action": "delete",
+        "risk": "medium",
+        "why": "Its index 2 is past the new count.",
+        "forcedBy": [],
+        "flags": [
+          "Destroyed."
+        ],
+        "diffs": [],
+        "checked": false
+      },
+      {
+        "address": "aws_cloudwatch_log_group.app",
+        "type": "aws_cloudwatch_log_group",
+        "action": "update",
+        "risk": "low",
+        "why": "Updated in place.",
+        "forcedBy": [],
+        "flags": [],
+        "diffs": [
+          {
+            "path": "retention_in_days",
+            "before": "30",
+            "after": "7"
+          }
+        ],
+        "checked": false
+      },
+      {
+        "address": "aws_instance.web[0]",
+        "type": "aws_instance",
+        "action": "update",
+        "risk": "low",
+        "why": "Updated in place.",
+        "forcedBy": [],
+        "flags": [
+          "AWS stops and starts the instance to change its type."
+        ],
+        "diffs": [
+          {
+            "path": "instance_type",
+            "before": "t3.small",
+            "after": "t3.medium"
+          }
+        ],
+        "checked": false
+      },
+      {
+        "address": "aws_instance.web[1]",
+        "type": "aws_instance",
+        "action": "update",
+        "risk": "low",
+        "why": "Updated in place.",
+        "forcedBy": [],
+        "flags": [
+          "AWS stops and starts the instance to change its type."
+        ],
+        "diffs": [
+          {
+            "path": "instance_type",
+            "before": "t3.small",
+            "after": "t3.medium"
+          }
+        ],
+        "checked": false
+      },
+      {
+        "address": "aws_sns_topic.alerts",
+        "type": "aws_sns_topic",
+        "action": "create",
+        "risk": "low",
+        "why": "New resource.",
+        "forcedBy": [],
+        "flags": [],
+        "diffs": [],
+        "checked": false
+      }
+    ],
+    "more": 0
+  }
+}

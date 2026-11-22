@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* Countersign: a change-approval form. White paper, navy ink, a teal signature, red for what gets destroyed. */
+:root {
+  --paper: #ffffff;
+  --wash: #f3f5f9;
+  --ink: #141b2d;
+  --ink-2: #3d4659;
+  --muted: #5a6378;
+  --line: #dce1ea;
+  --rule: #c9d0dc;
+  --brand: #0b6e5f;
+  --brand-soft: #e3f3ef;
+  --red: #b42318;
+  --red-soft: #fdecea;
+  --amber: #a14a06;
+  --amber-soft: #fef3e2;
+  --green: #0b6e3a;
+  --blue: #1d4ed8;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-wash: var(--wash);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-rule: var(--rule);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-red: var(--red);
+  --color-red-soft: var(--red-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-green: var(--green);
+  --color-blue: var(--blue);
+  --font-sans: var(--font-plex-sans), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), Menlo, monospace;
+}
+
+html { -webkit-font-smoothing: antialiased; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-plex-sans), "Helvetica Neue", Arial, sans-serif; }
+::selection { background: #cdeee6; }
+
+@layer components {
+  .label { font-family: var(--font-plex-mono), Menlo, monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 8px; font-weight: 600; font-size: 14px; padding: 8px 14px; white-space: nowrap; transition: background-color 120ms ease, border-color 120ms ease; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-ink { background: var(--ink); color: #fff; }
+  .btn-ink:hover:not(:disabled) { background: #26304a; }
+  .btn-line { background: var(--paper); color: var(--ink); border: 1.5px solid var(--rule); }
+  .btn-line:hover:not(:disabled) { border-color: var(--ink); }
+  .input { width: 100%; background: var(--paper); border: 1.5px solid var(--rule); border-radius: 8px; padding: 8px 12px; font-size: 14px; outline: none; transition: border-color 120ms ease; }
+  .input:focus { border-color: var(--ink); }
+}
